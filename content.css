@@ -1,0 +1,58 @@
+#floating-timer-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fdfdfd;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  z-index: 999999;
+  cursor: move;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  transition: background-color 0.25s, box-shadow 0.25s, transform 0.15s;
+  user-select: none;
+}
+
+#floating-timer-container.paused {
+    background-color: rgba(255, 193, 7, 0.9); /* Yellow when paused */
+    color: #111;
+}
+
+#timer-display {
+  user-select: none; /* Prevents text selection while dragging */
+}
+
+#floating-timer-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#floating-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.floating-control-btn {
+  min-width: 0;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.06);
+  color: inherit;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.floating-control-btn:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.floating-control-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}

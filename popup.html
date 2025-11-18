@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Floating Timer Control</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <button id="timer-tab" class="tab-button active">Timer</button>
+      <button id="stopwatch-tab" class="tab-button">Stopwatch</button>
+    </div>
+
+    <!-- Timer View -->
+    <div id="timer-view" class="view active">
+      <div class="presets">
+        <button class="preset-btn" data-time="60">1 min</button>
+        <button class="preset-btn" data-time="120">2 min</button>
+        <button class="preset-btn" data-time="180">3 min</button>
+        <button class="preset-btn" data-time="240">4 min</button>
+      </div>
+      <div class="custom-time">
+        <input type="text" id="custom-time-input" placeholder="H:MM:SS">
+        <button id="set-custom-btn">Set</button>
+      </div>
+    </div>
+
+    <!-- Stopwatch View (currently no content needed) -->
+    <div id="stopwatch-view" class="view">
+      <p>Control the stopwatch using the buttons below.</p>
+    </div>
+    
+    <!-- Shared Controls -->
+    <div class="controls">
+      <button id="start-btn">Start</button>
+      <button id="pause-btn">Pause</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+
+    <div id="status">Current Mode: Timer</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
