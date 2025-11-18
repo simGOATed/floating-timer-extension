@@ -2,6 +2,7 @@ var floatingTimer = null;
 var lastTimerState = null;
 var stopwatchIntervalId = null;
 var lastUpdateTimeMs = 0;
+var isTimerHidden = false;
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -37,9 +38,12 @@ function createFloatingTimer() {
     return;
   }
 
+  isTimerHidden = false;
+
   floatingTimer = document.createElement('div');
   floatingTimer.id = 'floating-timer-container';
   floatingTimer.innerHTML = `
+    <button id="floating-close-btn" class="floating-close-btn" aria-label="Close timer">&times;</button>
     <div id="floating-timer-inner">
       <div id="timer-display">00:00:00</div>
       <div id="floating-controls">
@@ -54,6 +58,7 @@ function createFloatingTimer() {
   const startBtn = floatingTimer.querySelector('#floating-start-btn');
   const pauseBtn = floatingTimer.querySelector('#floating-pause-btn');
   const resetBtn = floatingTimer.querySelector('#floating-reset-btn');
+  const closeBtn = floatingTimer.querySelector('#floating-close-btn');
 
   if (startBtn) {
     startBtn.addEventListener('click', (e) => {
@@ -76,15 +81,32 @@ function createFloatingTimer() {
     });
   }
 
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isTimerHidden = true;
+      stopStopwatchAnimation();
+      if (floatingTimer) {
+        floatingTimer.remove();
+        floatingTimer = null;
+      }
+      chrome.runtime.sendMessage({ command: 'pause' });
+    });
+  }
+
   makeDraggable(floatingTimer);
 }
 
 function updateDisplay(state) {
+    lastTimerState = state;
+
+    if (isTimerHidden && !state.isRunning) {
+        return;
+    }
+
     if (!floatingTimer) createFloatingTimer();
     const display = document.getElementById('timer-display');
     if (!display) return;
-
-    lastTimerState = state;
 
     if (state.mode === 'stopwatch') {
         if (state.isRunning) {
@@ -149,18 +171,16 @@ function makeDraggable(element) {
 
   function dragMouseDown(e) {
     if (e.button !== 0) return;
-    if (e.target.closest('.floating-control-btn')) {
+    if (e.target.closest('.floating-control-btn') || e.target.closest('.floating-close-btn')) {
       return;
     }
 
-    const computedStyle = window.getComputedStyle(element);
-    if (computedStyle.bottom !== 'auto' || computedStyle.right !== 'auto') {
-      const rect = element.getBoundingClientRect();
-      element.style.top = rect.top + 'px';
-      element.style.left = rect.left + 'px';
-      element.style.bottom = 'auto';
-      element.style.right = 'auto';
-    }
+    const rect = element.getBoundingClientRect();
+    element.style.top = rect.top + 'px';
+    element.style.left = rect.left + 'px';
+    element.style.bottom = 'auto';
+    element.style.right = 'auto';
+    element.style.transform = 'none';
 
     e.preventDefault();
     pos3 = e.clientX;
