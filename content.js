@@ -211,5 +211,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+function requestState() {
+  chrome.runtime.sendMessage({ command: 'getState' }, (response) => {
+    if (response) {
+      updateDisplay(response);
+    }
+  });
+}
+
+setInterval(requestState, 1000);
+
 // Initial creation
 createFloatingTimer();
+requestState();
